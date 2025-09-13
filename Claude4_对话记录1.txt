@@ -1,0 +1,99 @@
+python pw --info
+
+$env:UV_INDEX_URL = "https://pypi.tuna.tsinghua.edu.cn/simple"; python pw --install-context main
+
+.pyprojectx\venvs\main-02eb01a4f8e5515a0ea77e62e574788e-py3.12\Scripts\Activate.ps1; node --version
+
+npm --version
+
+npm install
+
+uv sync --group dev --group docstubs
+
+npm run generate-docstubs
+
+npm run build:cli:dev
+
+npm run run:cli -- --version
+
+
+# test
+
+npm run run:cli -- test_functionality.py
+
+node packages/pyright/langserver.index.js --stdio
+
+
+## BasedPyright 功能调试验证完成
+我已经全面测试了 BasedPyright 项目的核心功能，验证结果如下：
+
+### ✅ 成功验证的功能
+1. 1.
+   CLI 类型检查功能
+   
+   - 使用 npm run run:cli -- test_functionality.py 成功检测到所有预期的类型错误
+   - 准确识别了参数类型不匹配、未定义变量、复杂类型错误等问题
+   - 输出了详细的中文错误信息
+2. 2.
+   Python 模块功能
+   
+   - python -m basedpyright --version 正常显示版本信息：basedpyright 1.31.4
+   - python -m basedpyright test_functionality.py 类型检查功能完全正常
+3. 3.
+   语言服务器 (LSP) 功能
+   
+   - 语言服务器能够正常启动： node packages/pyright/langserver.index.js --stdio
+   - 成功输出 LSP 协议消息，显示服务器版本和根目录信息
+   - 可以与 IDE 进行通信集成
+4. 4.
+   Python 测试套件
+   
+   - npm run test-python 执行成功：3 个测试通过，1 个跳过
+   - 验证了 docstubs 生成和 Python 命令功能
+5. 5.
+   构建系统
+   
+   - CLI 开发版本构建成功
+   - Webpack 编译正常完成
+   - 所有依赖正确安装和配置
+### 🔧 可用的调试命令
+- 类型检查 ： npm run run:cli -- <文件名> 或 python -m basedpyright <文件名>
+- 语言服务器 ： npm run run:langserver
+- Python 测试 ： npm run test-python
+- 代码检查 ： npm run check
+- 格式化 ： npm run ruff-fix
+### 📝 测试文件
+创建了 `test_functionality.py` 作为功能验证文件，包含了各种类型错误场景，可用于后续调试和验证。
+
+结论 ：BasedPyright 的所有核心功能都运行正常，类型检查引擎、语言服务器、Python 模块集成等关键组件都已验证可用。项目已完全配置好，可以进行正常的开发和调试工作。
+
+
+
+
+
+npm run run:langserver
+
+
+# 带调试信息启动
+node --inspect packages/pyright/langserver.index.js --stdio
+
+# 详细日志模式
+npm run run:cli -- --verbose test_functionality.py
+
+# 使用 LSP 开发工具
+npm run lsp-inspect
+
+
+
+# 检查版本和功能
+npm run run:cli -- --version
+npm run run:cli -- --help
+
+# 类型检查测试
+npm run run:cli -- test_functionality.py
+
+# 监控模式（文件变化时自动检查）
+npm run run:cli -- --watch 文件名.py
+
+# 运行测试套件
+npm run test-python

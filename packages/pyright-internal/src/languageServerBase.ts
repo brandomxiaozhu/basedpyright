@@ -890,13 +890,17 @@ export abstract class LanguageServerBase implements LanguageServerInterface, Dis
                 return;
             }
 
+            const serverSettings = await this.getSettings(workspace);
+            const allowWorkspaceSearch = serverSettings.findAllReferencesInWorkspace ?? true;
+
             return workspace.service.run((program) => {
                 return new ReferencesProvider(
                     this,
                     program,
                     source.token,
                     createDocumentRange,
-                    convertToLocation
+                    convertToLocation,
+                    allowWorkspaceSearch
                 ).reportReferences(uri, params.position, params.context.includeDeclaration, resultReporter);
             }, token);
         } finally {

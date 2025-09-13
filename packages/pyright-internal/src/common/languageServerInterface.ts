@@ -52,6 +52,8 @@ export interface ServerSettings {
     useTypingExtensions?: boolean;
     fileEnumerationTimeoutInSec?: number | undefined;
     autoFormatStrings?: boolean;
+    // Whether “Find All References” searches the entire workspace; defaults to true
+    findAllReferencesInWorkspace?: boolean | undefined;
 }
 
 export interface MessageAction {

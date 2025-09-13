@@ -1,5 +1,6 @@
 [project]
 name = "basedpyright"
+index-url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 description = "static type checking for Python (but based)"
 dynamic = ["version"]
 authors = [
@@ -64,6 +65,25 @@ basedpyright-langserver = 'basedpyright.langserver:main'
 
 [tool.pyprojectx]
 lock-python-version = "3.8"
+
+[tool.pyprojectx.main]
+requirements = [
+    "uv",
+    "nodejs-wheel>=20.13.1",
+    "pdm-backend>=2.3.0",
+]
+
+[tool.pyprojectx.aliases]
+build = "python -m build"
+test = "pytest"
+lint = "ruff check ."
+format = "ruff format ."
+type-check = "basedpyright"
+
+[tool.pyprojectx.scripts]
+install-deps = "uv sync --group dev"
+compile-ts = "npm run build"
+setup = ["install-deps", "compile-ts"]
 
 [tool.uv]
 default-groups = ["dev", "docstubs", "lochelper"]

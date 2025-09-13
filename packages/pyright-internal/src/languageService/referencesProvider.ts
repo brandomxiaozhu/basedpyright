@@ -222,7 +222,8 @@ export class ReferencesProvider {
             ls: LanguageServerInterface,
             fs: ReadOnlyFileSystem,
             ranges: DocumentRange
-        ) => Location | undefined
+        ) => Location | undefined,
+        private readonly _allowWorkspaceSearch: boolean = true
     ) {
         // empty
     }
@@ -300,32 +301,35 @@ export class ReferencesProvider {
             );
         }
 
-        for (const curSourceFileInfo of this._program.getSourceFileInfoList()) {
-            throwIfCancellationRequested(this._token);
+        // Only search across the workspace when allowed by settings.
+        if (this._allowWorkspaceSearch) {
+            for (const curSourceFileInfo of this._program.getSourceFileInfoList()) {
+                throwIfCancellationRequested(this._token);
 
-            // "Find all references" will only include references from user code
-            // unless the file is explicitly opened in the editor or it is invoked from non user files.
-            if (curSourceFileInfo.isOpenByClient || !invokedFromUserFile || isUserCode(curSourceFileInfo)) {
-                // See if the reference symbol's string is located somewhere within the file.
-                // If not, we can skip additional processing for the file.
-                const fileContents = curSourceFileInfo.contents;
+                // "Find all references" will only include references from user code
+                // unless the file is explicitly opened in the editor or it is invoked from non user files.
+                if (curSourceFileInfo.isOpenByClient || !invokedFromUserFile || isUserCode(curSourceFileInfo)) {
+                    // See if the reference symbol's string is located somewhere within the file.
+                    // If not, we can skip additional processing for the file.
+                    const fileContents = curSourceFileInfo.contents;
 
-                if (
-                    checkConstructorUsagesForClass ||
-                    !fileContents ||
-                    referencesResult.symbolNames.some((s) => fileContents.indexOf(s) >= 0)
-                ) {
-                    this.addReferencesToResult(
-                        curSourceFileInfo.uri,
-                        includeDeclaration,
-                        referencesResult,
-                        checkConstructorUsagesForClass
-                    );
+                    if (
+                        checkConstructorUsagesForClass ||
+                        !fileContents ||
+                        referencesResult.symbolNames.some((s) => fileContents.indexOf(s) >= 0)
+                    ) {
+                        this.addReferencesToResult(
+                            curSourceFileInfo.uri,
+                            includeDeclaration,
+                            referencesResult,
+                            checkConstructorUsagesForClass
+                        );
+                    }
+
+                    // This operation can consume significant memory, so check
+                    // for situations where we need to discard the type cache.
+                    this._program.handleMemoryHighUsage();
                 }
-
-                // This operation can consume significant memory, so check
-                // for situations where we need to discard the type cache.
-                this._program.handleMemoryHighUsage();
             }
         }
 

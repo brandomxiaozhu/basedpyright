@@ -1,0 +1,1 @@
+1. 当前项目是github上BasedPyright的一个fork版本，原代码地址为https://github.com/DetachHead/basedpyright，BasedPyright的介绍为Basedpyright is a fork of pyright with various type checking improvements, pylance features and more.

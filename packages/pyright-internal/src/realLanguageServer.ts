@@ -132,6 +132,7 @@ export abstract class RealLanguageServer extends LanguageServerBase {
                 genericTypes: false,
             },
             useTypingExtensions: false,
+            findAllReferencesInWorkspace: true,
         };
 
         try {
@@ -236,6 +237,10 @@ export abstract class RealLanguageServer extends LanguageServerBase {
                     serverSettings.autoFormatStrings = pythonAnalysisSection.autoFormatStrings;
                 }
 
+                if (pythonAnalysisSection.findAllReferencesInWorkspace !== undefined) {
+                    serverSettings.findAllReferencesInWorkspace = !!pythonAnalysisSection.findAllReferencesInWorkspace;
+                }
+
                 const inlayHintSection = pythonAnalysisSection.inlayHints;
                 if (inlayHintSection) {
                     serverSettings.inlayHints = { ...serverSettings.inlayHints, ...inlayHintSection };
@@ -259,6 +264,9 @@ export abstract class RealLanguageServer extends LanguageServerBase {
                 if (pyrightSection.useLibraryCodeForTypes !== undefined) {
                     serverSettings.useLibraryCodeForTypes = !!pyrightSection.useLibraryCodeForTypes;
                 }
+
+                if (pyrightSection.findAllReferencesInWorkspace !== undefined) {
+                    serverSettings.findAllReferencesInWorkspace = !!pyrightSection.findAllReferencesInWorkspace;
 
                 serverSettings.disableLanguageServices = !!pyrightSection.disableLanguageServices;
                 serverSettings.disableTaggedHints = !!pyrightSection.disableTaggedHints;
