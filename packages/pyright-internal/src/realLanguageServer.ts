@@ -267,6 +267,7 @@ export abstract class RealLanguageServer extends LanguageServerBase {
 
                 if (pyrightSection.findAllReferencesInWorkspace !== undefined) {
                     serverSettings.findAllReferencesInWorkspace = !!pyrightSection.findAllReferencesInWorkspace;
+                }
 
                 serverSettings.disableLanguageServices = !!pyrightSection.disableLanguageServices;
                 serverSettings.disableTaggedHints = !!pyrightSection.disableTaggedHints;
